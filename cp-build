@@ -1,0 +1,75 @@
+#!/bin/bash
+
+##### CONFIG #####
+export CP_BUILD_USE_GDB=${CP_BUILD_USE_GDB:-false}
+export CP_BUILD_INTERACTIVE=${CP_BUILD_INTERACTIVE:-false}
+export TERMINAL=${TERMINAL:-tilix}
+export INFILE=${INFILE:-~/in}
+export OUTFILE=${OUTFILE:-~/out}
+export ERRFILE=${ERRFILE:-/dev/null}
+#####
+
+
+if (($# == 0))
+then
+    echo "no input file" && exit;
+fi
+
+name=$1
+files=$1
+
+if ((${#name} < 5))
+then
+    echo "short file name" && exit;
+fi
+
+name="${name::-4}"
+
+if test -f "grader.cpp"
+then
+    files="${files} grader.cpp"
+fi
+
+if test -f "stub.cpp"
+then
+    files="${files} stub.cpp"
+fi
+
+if [[ $CP_BUILD_USE_GDB == "true" ]]
+then
+    g++ -DLOCAL -std=c++17 -g -o ${name} ${files}
+else
+    g++ -DLOCAL -std=c++17 -o ${name} ${files}
+fi
+
+if [[ $? != 0 ]]
+then exit
+fi
+
+
+ulimit -v 3145728
+
+if [[ $CP_BUILD_USE_GDB == "true" ]]
+then
+    $TERMINAL run -e "gdb ./${name}"
+elif [[ $CP_BUILD_INTERACTIVE == "true" ]]
+then
+    $TERMINAL run -e "bash -c \"./${name} &&  read -rsp $'Press any key to continue...\n'\""
+elif [[ $OUTFILE == $ERRFILE ]]
+then
+    timeout 7s ./${name} < $INFILE > $OUTFILE 2>&1
+else
+    timeout 7s ./${name} < $INFILE > $OUTFILE 2> $ERRFILE
+fi
+
+ec=$?
+
+if [[ $ec == 124 ]]
+then
+    echo "[TIMED OUT]"
+elif [[ $ec != 0 ]]
+then
+    echo "[RUNTIME ERROR]"
+fi
+
+exit

@@ -1,0 +1,19 @@
+{
+    "shell_cmd": "cp-build \"${file_name}\"",
+    "working_dir": "${file_path}",
+    "selector": "source.cpp",
+    "variants":[
+        {
+            "name":"interactive",
+            "shell_cmd": "CP_BUILD_INTERACTIVE=true cp-build \"${file_name}\"",
+            "working_dir": "${file_path}",
+            "selector": "source.cpp"
+        },
+        {
+            "name":"gdb",
+            "shell_cmd": "CP_BUILD_USE_GDB=true cp-build \"${file_name}\"",
+            "working_dir": "${file_path}",
+            "selector": "source.cpp"
+        }
+    ]
+}
