@@ -8,6 +8,7 @@ A sublime build system for compatitive programmers.
 	- change `INFILE` variable to the path of input file.
 	- change `OUTFILE` variable to the path of output file.
 - copy `cp-build` to `~/.local/bin/`
+- give it executing permission (`chmod +x ~/.local/bin/cp-build`)
 - copy `cp-build.sublime-build` to `~/.config/sublime-text/Packages/User`
 
 ## Features
