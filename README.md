@@ -1,5 +1,5 @@
 # cp-sublime-build-system
-A sublime build system for compatitive programmers.
+A sublime build system for competitive programmers.
 
 ## How to use
 - Open `cp-build`
